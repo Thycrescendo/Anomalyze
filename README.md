@@ -1,10 +1,6 @@
-Here's your content formatted into a clean, structured `README.md` file:
-
-````markdown
 # Anomalyze
 
 **AI-Powered Anomaly Detection for Token Markets**  
-*Built for the Wavehack Buildathon 2025*
 
 Anomalyze is a decentralized application (dApp) leveraging Nodit’s Blockchain Model Context Protocol (MCP) to combine AI-driven analysis with real-time token market data. It detects anomalies such as unusual trading volumes or suspicious wallet activities and provides users with anomaly scores, detailed reports, and customizable alerts.
 
@@ -157,29 +153,7 @@ Visit: [http://localhost:3000](http://localhost:3000)
 
 > ⚠️ This is currently a front-end prototype. Full backend integration is in development.
 
----
 
-## 📁 Project Structure
-
-```
-anomalyze/
-├── src/
-│   ├── components/
-│   │   ├── Header.tsx       # Navigation bar
-│   │   └── Dashboard.tsx    # Anomaly dashboard
-│   ├── App.tsx              # Root component
-│   ├── index.css            # Tailwind CSS directives
-│   └── index.tsx            # React entry point
-├── public/
-│   ├── index.html           # HTML template
-│   └── favicon.ico          # App icon
-├── tailwind.config.js       # Tailwind configuration
-├── postcss.config.js        # PostCSS config
-├── package.json             # Dependencies and scripts
-└── README.md                # Project documentation
-```
-
----
 
 ## 🔮 Future Roadmap
 
@@ -214,22 +188,3 @@ Please follow best practices for TypeScript and Tailwind CSS.
 This project is licensed under the [MIT License](./LICENSE).
 
 ---
-
-### 🧠 Built for Wavehack Buildathon 2025
-
-**Created by \[Your Name]**
-Powered by **Nodit** and **xAI**
-
----
-
-## 📝 Notes for Customization
-
-* Replace `https://github.com/your-username/anomalyze.git` with your GitHub repo.
-* Add your name in the “Created by” section.
-* Ensure the `LICENSE` file is present.
-* Customize placeholder texts and links as needed.
-
-```
-
-Let me know if you want this as a downloadable file or customized for GitHub Pages or another hosting platform.
-```
