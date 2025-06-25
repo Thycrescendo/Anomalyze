@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
+import Reports from './components/Reports';
 import Settings from './components/Settings';
 
 const App: React.FC = () => {
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         className="container mx-auto p-4"
       >
         <Dashboard />
+        <Reports />
         <Settings />
       </motion.main>
     </div>
