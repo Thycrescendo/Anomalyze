@@ -74,7 +74,6 @@ A real-time anomaly detection platform for blockchain token transfers, leveragin
      WEBSOCKET_URL=wss://web3.nodit.io/v1/websocket
      PORT=5000
 ```
-   - Replace `your_nodit_api_key` with a valid Nodit API key for real data; otherwise, mock data will be used.
 
 3. **Run the Backend**:
    ```bash
