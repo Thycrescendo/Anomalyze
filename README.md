@@ -1,203 +1,129 @@
 # Anomalyze
 
-**AI-Powered Anomaly Detection for Token Markets**
-
-Anomalyze is a decentralized application (dApp) built for the leveraging of **Nodit’s Blockchain Model Context Protocol (MCP)**, **Webhook/Stream**, and **Web3 Data API** to detect anomalies in token markets. The app monitors real-time token transfers, flags unusual activities (e.g., high-volume trades), and provides anomaly scores and alerts. Built with **React**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**, Anomalyze offers a modern, animated UI for Web3 data monitoring.
-
----
-
-## Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Nodit Integration](#nodit-integration)
-- [Anomaly Detection Logic](#anomaly-detection-logic)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Future Roadmap](#future-roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
-## Overview
-
-Anomalyze combines AI and blockchain data to monitor token markets for irregularities, such as unusual trading volumes or suspicious wallet activities. It integrates **Nodit’s Webhook/Stream** for real-time data, **Web3 Data API** for historical data, and **MCP** for AI-driven analysis. The front-end features a responsive dashboard with animated anomaly cards, real-time alerts, and a settings panel for customizable thresholds.
-
-This project addresses the Wavehack Buildathon’s goal of creating innovative Web3 + AI applications, with a focus on real-time data processing and user-friendly UX.
-
----
+A real-time anomaly detection platform for blockchain token transfers, leveraging **Nodit’s full stack** (Webhook/Stream, Web3 Data API, MCP)
 
 ## Features
-
-- **Real-Time Anomaly Detection**: Flags high-volume token transfers using Nodit’s Webhook/Stream.
-- **Anomaly Scoring**: Assigns scores (e.g., 95 for anomalies, 10 for normal) based on volume thresholds.
-- **Real-Time Alerts**: Displays new anomalies in a banner for 5 seconds.
-- **Historical Data**: Fetches past token transfers via Nodit’s Web3 Data API.
-- **Customizable Thresholds**: Allows users to adjust anomaly detection thresholds in the settings panel.
-- **Responsive UI**: Adapts to mobile, tablet, and desktop with Tailwind CSS.
-- **Animated Dashboard**: Uses Framer Motion for smooth transitions and engaging visuals.
-
----
+- **Real-Time Anomaly Detection**: Uses **Nodit Webhook/Stream** to monitor Ethereum and Polygon token transfers, with mock data fallback.
+- **Anomaly Sorting and Watchlist**: Sort anomalies by score or time and add to a watchlist (Dashboard).
+- **Anomaly Score Trends**: Visualize anomaly scores over time using **Nodit Web3 Data API** and Recharts (Visualizations).
+- **Filtered Reports**: Generate, filter (by chain), and export mock reports with **Nodit MCP** Z-score analysis (Reports).
+- **Customizable Settings**: Adjust thresholds, select blockchains, toggle alerts, and validate **Nodit API key** (Settings).
 
 ## Tech Stack
+- **Frontend**: React, TypeScript, Tailwind CSS, Framer Motion, Recharts
+- **Backend**: Node.js, Express, Socket.IO, Axios, **Nodit Webhook/Stream**, **Nodit Web3 Data API**, **Nodit MCP**
+- **Deployment**: Local development (http://localhost:3000)
 
-- **Front-End**:
-  - **React**: Component-based UI framework.
-  - **TypeScript**: Type-safe JavaScript.
-  - **Tailwind CSS**: Utility-first CSS for styling.
-  - **Framer Motion**: Animations for UX.
-  - **Socket.IO**: Real-time WebSocket communication.
-- **Backend**:
-  - **Node.js/Express**: API and WebSocket server.
-  - **Socket.IO**: Broadcasts real-time anomalies.
-  - **Axios**: Handles Nodit API requests.
-- **Blockchain Integration**:
-  - **Nodit Webhook/Stream**: Streams real-time token transfer events.
-  - **Nodit Web3 Data API**: Retrieves historical token data.
-  - **Nodit MCP**: Processes data for AI-driven anomaly detection (planned).
-- **Development Tools**:
-  - Node.js, npm, PostCSS, Autoprefixer
+## Installation
+1. Clone the repository:
+```bash
+   git clone https://github.com/Thycrescendo/Anomalyze.git
+   cd anomalyze
+```
+2. Install frontend dependencies:
+```bash
+   npm install
+   npm install framer-motion socket.io-client@latest recharts
+```
+3. Install backend dependencies:
+```bash
+   cd anomalyze-backend
+   npm install express socket.io axios dotenv socket.io-client
+```
+4. Configure environment:
+   Create `anomalyze-backend/.env`:
+```env
+   NODIT_API_KEY=your_nodit_api_key
+   WEBSOCKET_URL=wss://web3.nodit.io/v1/websocket
+   PORT=5000
+```
+5. Run backend:
+```bash
+   cd anomalyze-backend
+   node index.js
+```
+6. Run frontend:
+```bash
+   cd anomalyze
+   npm start
+```
 
----
-
-## Nodit Integration
-
-Anomalyze leverages Nodit’s Web3 infrastructure for real-time and historical data processing:
-
-1. **Webhook/Stream**:
-   - Subscribes to Ethereum token transfer events via Nodit’s WebSocket API.
-   - Example subscription:
-     ```javascript
-     ws.emit('subscription', 'anomalyze_001', 'TOKEN_TRANSFER', {
-       description: 'Monitor Ethereum token transfers',
-       condition: { protocol: 'ethereum', network: 'mainnet' },
-     });
-     ```
-   - Streams data to the backend, which broadcasts anomalies to the front-end.[](https://developer.nodit.io/reference/how-to-use-stream)
-
-2. **Web3 Data API**:
-   - Fetches historical token transfers for a given account.
-   - Example API call:
-     ```bash
-     curl --request POST \
-       --url https://web3.nodit.io/v1/ethereum/mainnet/token/getTokenTransfersByAccount \
-       --header 'X-API-KEY: YOUR_API_KEY' \
-       --data '{
-         "accountAddress": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-         "fromDate": "2025-06-01T00:00:00+00:00",
-         "toDate": "2025-06-10T00:00:00+00:00"
-       }'
-     ```
-   - Used to display past anomalies in the dashboard.[](https://developer.nodit.io/docs/nodit-overview)
-
-3. **Model Context Protocol (MCP)**:
-   - Planned integration to feed token transfer data to an AI model (e.g., Claude) for advanced anomaly detection.
-   - Example use case: Analyze wallet activity for unusual patterns using natural language prompts.
-   - Current implementation uses a threshold-based algorithm as a placeholder.[](https://www.investing.com/news/cryptocurrency-news/nodit-launches-blockchain-mcp-to-bring-blockchain-context-to-gpts-and-ai-tools-4069100)
+## Wave 3 Roadmap
+- Enhanced **Nodit MCP** integration with Z-score analysis for anomaly scoring.
+- Multi-chain support (Ethereum, Polygon) via **Nodit Webhook/Stream**.
+- Visualizations of anomaly trends using **Recharts** and **Nodit Web3 Data API**.
+- Improved UX with filtering, watchlist, and alert toggling.
 
 ---
 
-## Anomaly Detection Logic
+### Step 6: Testing Steps
 
-The current anomaly detection uses a **threshold-based algorithm**:
-- **Input**: Token transfer data (e.g., value, token, timestamp) from Nodit’s Webhook/Stream or Web3 Data API.
-- **Logic**: Flags transfers with a value > 10,000 units as anomalies (score: 95). Others are non-anomalies (score: 10).
-- **Output**: Anomaly objects with token, volume, score, and timestamp, displayed in the dashboard.
+1. **Install Dependencies**:
+```bash
+   cd anomalyze
+   npm install
+   npm install framer-motion socket.io-client@latest recharts
+   cd anomalyze-backend
+   npm install express socket.io axios dotenv socket.io-client
+```
 
-**Example**:
-```javascript
-function detectAnomaly(transfer) {
-  const volume = parseFloat(transfer.value);
-  const threshold = 10000;
-  return volume > threshold ? { ...transfer, score: 95, isAnomaly: true } : { ...transfer, score: 10, isAnomaly: false };
-}
-Future Enhancement:
-Integrate Nodit MCP to use AI models for statistical analysis (e.g., Z-score) or machine learning to detect complex patterns.
-Example: Z-score = (volume - mean_volume) / std_dev_volume. Flag Z-score > 3 as anomalies.
-Installation
-Prerequisites
-Node.js: v16.x or higher
-npm: v7.x or higher
-Nodit API Key: Obtain from Nodit Console
-Front-End Setup
-Clone the repository:
-bash
-git clone https://github.com/thycrescendo/anomalyze.git
-cd anomalyze
-Install dependencies:
-bash
-npm install
-Initialize Tailwind CSS:
-bash
-npx tailwindcss init -p
-Start the front-end:
-bash
-npm start
-Backend Setup
-Navigate to the backend directory:
-bash
-cd anomalyze-backend
-Install dependencies:
-bash
-npm install
-Create a .env file:
-env
-NODIT_API_KEY=your_nodit_api_key
-NODIT_WEBSOCKET_URL=wss://web3.nodit.io/v1/websocket
-PORT=5000
-Start the backend:
-bash
-node index.js
-Usage
-Launch the App:
-Run the backend (node index.js) and front-end (npm start).
-Open http://localhost:3000.
-Monitor Anomalies:
-View real-time anomaly alerts in the banner.
-Browse anomaly cards with token, volume, score, and timestamp.
-Adjust Settings:
-Set a custom volume threshold in the settings panel.
-View Historical Data:
+2. **Configure Backend**:
+   - Create `anomalyze-backend/.env`:
+```env
+     NODIT_API_KEY=your_nodit_api_key
+     WEBSOCKET_URL=wss://web3.nodit.io/v1/websocket
+     PORT=5000
+```
+   - Replace `your_nodit_api_key` with a valid Nodit API key for real data; otherwise, mock data will be used.
 
-Dashboard displays past anomalies fetched via Nodit’s Web3 Data API.
-Project Structure
+3. **Run the Backend**:
+   ```bash
+   cd anomalyze-backend
+   node index.js
+   ```
 
+4. **Run the Front-End**:
+   ```bash
+   cd anomalyze
+   npm start
+   ```
 
-Future Roadmap
-Full MCP Integration: Use AI models for advanced anomaly detection.
-Detailed Reports: Generate comprehensive anomaly reports via Web3 Data API.
-Multi-Chain Support: Extend to Aptos, Bitcoin, and other chains.
-Enhanced UX: Add charts and visualizations for anomaly trends.
-Deployment: Host on Vercel (front-end) and Render (backend).
-Contributing
-Fork the repository.
-Create a feature branch (git checkout -b feature/your-feature).
-Commit changes (git commit -m 'Add your feature').
-Push to the branch (git push origin feature/your-feature).
-Open a Pull Request.
+5. **Verify Functionalities**:
+   - **Dashboard**:
+     - Mock or real anomalies (via **Nodit Webhook/Stream**) appear every 10 seconds.
+     - Sort anomalies by score or time.
+     - Click “View Report” or “Add to Watchlist” to see browser alerts.
+   - **Visualizations**:
+     - View a line chart of anomaly scores over time.
+   - **Reports**:
+     - Filter reports by chain (All, Ethereum, Polygon).
+     - Click “Generate Report” to view details and “Download Report” or “Export All Reports” for alerts.
+   - **Settings**:
+     - Update threshold, switch chains, toggle alerts, or validate API key to see alerts.
+   - Open `http://localhost:3000` and check animations and responsiveness.
 
+6. **Debug Issues**:
+   - Check browser console for errors (WebSocket, fetch, rendering).
+   - Verify backend logs for Nodit API calls and client connections.
+   - Run `npm run build` to ensure no compilation errors.
+   - Share any errors for debugging.
 
 ---
 
-## Testing and Validation
-1. **Run Both Servers**:
-   - Backend: `cd anomalyze-backend && node index.js`
-   - Front-End: `cd anomalyze && npm start`
-2. **Verify Features**:
-   - Real-time alerts appear when mock or Nodit data triggers anomalies.
-   - Historical anomalies load in the dashboard.
-   - Settings panel updates thresholds (alert confirms).
-   - UI is responsive on mobile devices.
-3. **Check Nodit Integration**:
-   - WebSocket logs show subscription events.
-   - API endpoint returns historical data.
+### Step 7: Alignment
+
+- **Clear Nodit Usage**:
+  - Backend explicitly uses **Nodit Webhook/Stream** and **Web3 Data API** with real API calls (mock fallback).
+  - **Nodit MCP** Z-score analysis enhances anomaly detection.
+  - README and comments highlight Nodit integration.
+- **Code Progress**:
+  - Fixed compilation errors for a stable build.
+  - Added visualizations and new virtual functionalities (watchlist, report filtering, alert toggle, API key validation).
+- **Roadmap Execution**:
+  - Implemented Wave 2’s visualization and multi-chain plans.
+  - Added MCP for advanced anomaly scoring, preparing for Wave 3.
+- **UX**:
+  - Enhanced interactivity with sorting, filtering, watchlist, and alert toggling.
+  - Animations and charts improve visual appeal.
 
 ---
-
-
-- **Nodit Integration**: Implemented Webhook/Stream and Web3 Data API; planned MCP for AI analysis.
-- **Anomaly Detection**: Defined threshold-based logic with plans for AI enhancement.
-- **UX**: Added alerts, settings, color-coded cards, and responsive design.
-- **Acceleration**: Used mock data and prioritized minimal viable features.

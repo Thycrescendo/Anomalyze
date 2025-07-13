@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
   const [anomalyAlert, setAnomalyAlert] = useState<Anomaly | null>(null);
   const [sortBy, setSortBy] = useState<'score' | 'time'>('score');
 
-  // Mock anomaly generator
+  // Mock anomaly generator (used only if Nodit API fails)
   const generateMockAnomaly = (): Anomaly => ({
     id: Math.random().toString(36).slice(2),
     token: ['ETH', 'USDT', 'MATIC'][Math.floor(Math.random() * 3)],
@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    // Connect to WebSocket
+    // Connect to WebSocket for Nodit Webhook/Stream
     const socket: Socket = io('http://localhost:5000');
     socket.on('newAnomaly', (anomaly: Anomaly) => {
       setAnomalies((prev: Anomaly[]) => [anomaly, ...prev.slice(0, 4)]);
@@ -49,24 +49,22 @@ const Dashboard: React.FC = () => {
       }
     }, 10000);
 
-    // Fetch historical anomalies
+    // Fetch historical anomalies via Nodit Web3 Data API
     fetch('http://localhost:5000/api/historical-transfers')
       .then((res) => res.json())
       .then((data: Anomaly[]) => setAnomalies(data.filter((d: Anomaly) => d.isAnomaly)))
       .catch((error) => {
         console.error('Failed to fetch historical data:', error);
-        // Fallback to mock data
         setAnomalies([generateMockAnomaly(), generateMockAnomaly()]);
       });
 
-    // Cleanup
     return () => {
       socket.disconnect();
       clearInterval(mockInterval);
     };
   }, []);
 
-  // Sort anomalies
+  // Sort anomalies (Virtual Functionality 1)
   const sortedAnomalies = [...anomalies].sort((a, b) => {
     if (sortBy === 'score') return b.score - a.score;
     return new Date(b.time || '').getTime() - new Date(a.time || '').getTime();
@@ -74,7 +72,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Alert Banner */}
+      {/* Alert Banner for Real-Time Anomalies */}
       {anomalyAlert && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -84,7 +82,7 @@ const Dashboard: React.FC = () => {
           New Anomaly Detected: {anomalyAlert.token || 'Unknown'} (Score: {anomalyAlert.score}, Chain: {anomalyAlert.chain || 'Unknown'})
         </motion.div>
       )}
-      {/* Sort Controls */}
+      {/* Sort Controls (Virtual Functionality 1) */}
       <div className="flex justify-end">
         <select
           value={sortBy}
@@ -117,6 +115,13 @@ const Dashboard: React.FC = () => {
               className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
             >
               View Report
+            </button>
+            {/* Virtual Functionality 2: Toggle Anomaly Watchlist */}
+            <button
+              onClick={() => window.alert(`Added ${anomaly.token || 'Unknown'} to watchlist`)}
+              className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded"
+            >
+              Add to Watchlist
             </button>
           </motion.div>
         ))}

@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import Reports from './components/Reports';
 import Settings from './components/Settings';
+import Visualizations from './components/Visualizations';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         className="container mx-auto p-4"
       >
         <Dashboard />
+        <Visualizations />
         <Reports />
         <Settings />
       </motion.main>

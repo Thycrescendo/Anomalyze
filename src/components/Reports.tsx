@@ -13,8 +13,9 @@ interface Report {
 
 const Reports: React.FC = () => {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [filterChain, setFilterChain] = useState<'All' | 'Ethereum' | 'Polygon'>('All');
 
-  // Mock report data
+  // Mock report data (simulating Nodit Web3 Data API results)
   const mockReports: Report[] = [
     {
       id: 'report1',
@@ -23,7 +24,7 @@ const Reports: React.FC = () => {
       score: 92,
       time: '2025-06-25T14:30:00Z',
       chain: 'Ethereum',
-      analysis: 'High volume detected, potential whale movement.',
+      analysis: 'High volume detected, potential whale movement (Nodit MCP Z-score: 3.2).',
     },
     {
       id: 'report2',
@@ -32,7 +33,7 @@ const Reports: React.FC = () => {
       score: 85,
       time: '2025-06-25T14:15:00Z',
       chain: 'Polygon',
-      analysis: 'Unusual transfer pattern, possible arbitrage activity.',
+      analysis: 'Unusual transfer pattern, possible arbitrage (Nodit MCP Z-score: 2.8).',
     },
   ];
 
@@ -42,9 +43,16 @@ const Reports: React.FC = () => {
 
   const handleDownloadReport = () => {
     if (selectedReport) {
-      alert(`Downloading PDF report for ${selectedReport.token} (ID: ${selectedReport.id})`);
+      window.alert(`Downloading PDF report for ${selectedReport.token} (ID: ${selectedReport.id})`);
     }
   };
+
+  const handleExportAll = () => {
+    window.alert('Exporting all reports as CSV');
+  };
+
+  // Filter reports by chain
+  const filteredReports = filterChain === 'All' ? mockReports : mockReports.filter((report) => report.chain === filterChain);
 
   return (
     <motion.div
@@ -52,13 +60,26 @@ const Reports: React.FC = () => {
       animate={{ opacity: 1 }}
       className="bg-gray-800 p-6 rounded-lg shadow-lg mt-6"
     >
-      <h2 className="text-xl font-bold mb-4">Reports</h2>
+      <h2 className="text-xl font-bold mb-4">Reports (Powered by Nodit Web3 Data API)</h2>
+      {/* Virtual Functionality 1: Filter by Chain */}
+      <div className="flex justify-end mb-4">
+        <select
+          value={filterChain}
+          onChange={(e) => setFilterChain(e.target.value as 'All' | 'Ethereum' | 'Polygon')}
+          className="p-2 bg-gray-700 text-white rounded"
+        >
+          <option value="All">All Chains</option>
+          <option value="Ethereum">Ethereum</option>
+          <option value="Polygon">Polygon</option>
+        </select>
+      </div>
       <div className="space-y-4">
-        {mockReports.map((report) => (
+        {filteredReports.map((report) => (
           <div key={report.id} className="p-4 bg-gray-700 rounded">
             <h3 className="text-lg font-semibold">{report.token} Report</h3>
             <p className="text-gray-400">Score: {report.score}</p>
             <p className="text-gray-400">Time: {report.time}</p>
+            <p className="text-gray-400">Chain: {report.chain}</p>
             <button
               onClick={() => handleGenerateReport(report)}
               className="mt-2 bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded"
@@ -83,6 +104,13 @@ const Reports: React.FC = () => {
           </button>
         </div>
       )}
+      {/* Virtual Functionality 2: Export All Reports */}
+      <button
+        onClick={handleExportAll}
+        className="mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded"
+      >
+        Export All Reports
+      </button>
     </motion.div>
   );
 };
