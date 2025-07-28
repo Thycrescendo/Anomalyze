@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-gray-800 py-4 shadow-lg">
-      <div className="container mx-auto flex justify-between items-center px-4">
+    <header className="bg-gradient-to-r from-gray-700 to-gray-800 text-white shadow-lg fixed w-full z-10">
+      <div className="container mx-auto flex justify-between items-center px-4 py-3">
         <motion.h1
           initial={{ x: -100 }}
           animate={{ x: 0 }}
@@ -14,10 +14,11 @@ const Header: React.FC = () => {
           Anomalyze
         </motion.h1>
         <nav>
-          <ul className="flex space-x-4">
-            <li><a href="#dashboard" className="hover:text-blue-400">Dashboard</a></li>
-            <li><a href="#reports" className="hover:text-blue-400">Reports</a></li>
-            <li><a href="#settings" className="hover:text-blue-400">Settings</a></li>
+          <ul className="flex space-x-6">
+            <li><a href="#dashboard" className="hover:text-blue-300">Dashboard</a></li>
+            <li><a href="#visualizations" className="hover:text-blue-300">Visualizations</a></li>
+            <li><a href="#reports" className="hover:text-blue-300">Reports</a></li>
+            <li><a href="#settings" className="hover:text-blue-300">Settings</a></li>
           </ul>
         </nav>
       </div>

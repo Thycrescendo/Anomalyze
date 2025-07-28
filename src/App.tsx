@@ -2,13 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
+import Visualizations from './components/Visualizations';
 import Reports from './components/Reports';
 import Settings from './components/Settings';
-import Visualizations from './components/Visualizations';
 
 const App: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="bg-gray-900 text-gray-300 min-h-screen">
       <Header />
       <motion.main
         initial={{ opacity: 0 }}
