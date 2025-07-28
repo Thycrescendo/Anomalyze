@@ -8,10 +8,17 @@ A real-time anomaly detection platform for blockchain token transfers, leveragin
 - **Webhook/Stream**: Real-time token transfer event detection on Ethereum and Polygon.
 - **Web3 Data API**: Historical transaction data for anomaly scoring.
 - **Blockchain MCP**: AI-driven anomaly prediction using Z-score with trend analysis.
+# Anomalyze - AI-Powered Anomaly Detection dApp
 
-## Development Progress
-- Wave 3: Implemented Nodit-powered Anomaly Prediction Engine (July 28 - August 2, 2025).
-- Wave 4 Plan: Customizable alert system (August 4 - August 28, 2025).
+## Smart Contract
+- **Contract**: `AnomalyRegistry` deployed on Sepolia testnet.
+- **Purpose**: Logs anomalies on-chain for transparency.
+- **Deployment**: Use Hardhat with `scripts/deploy.js`.
+
+## Nodit Feature Utilization
+- **Webhook/Stream**: Real-time token transfer detection.
+- **Web3 Data API**: Historical data for scoring.
+- **Blockchain MCP**: AI-driven anomaly prediction.
 
 ## Installation
 - Backend: `npm install && node index.js`

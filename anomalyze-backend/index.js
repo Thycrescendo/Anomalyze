@@ -1,14 +1,25 @@
+const { ethers } = require("ethers");
 require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const axios = require('axios');
+const WebSocket = require('ws');
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
 const NODIT_API_KEY = process.env.NODIT_API_KEY;
 const WEBSOCKET_URL = process.env.WEBSOCKET_URL || 'wss://web3.nodit.io/v1/websocket';
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS; // Add to .env
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const PROVIDER_URL = process.env.SEPOLIA_RPC_URL;
+
+const provider = new ethers.providers.JsonRpcProvider(PROVIDER_URL);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+const abi = [/* ABI from compiled contract */]; // Replace with actual ABI
+const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 
 app.use(express.json());
 
@@ -32,26 +43,31 @@ ws.onopen = () => {
   }));
 };
 
-ws.onmessage = (event) => {
+ws.onmessage = async (event) => {
   const data = JSON.parse(event.data);
   if (data.event === 'TOKEN_TRANSFER') {
-    const anomaly = detectAnomaly(data);
+    const volume = parseFloat(data.volume || 0);
+    const historicalData = []; // Fetch from Web3 Data API if needed
+    const score = calculateZScore(volume, historicalData);
+    const anomaly = {
+      id: data.transactionHash,
+      token: data.tokenSymbol,
+      volume: data.volume,
+      score,
+      time: data.timestamp,
+      isAnomaly: score > 90,
+      chain: data.chain,
+    };
+    await contract.logAnomaly(anomaly.token, anomaly.score, anomaly.chain);
     io.emit('newAnomaly', anomaly);
   }
 };
 
-function detectAnomaly(data) {
-  const volume = parseFloat(data.volume || 0);
-  const historicalData = []; // To be populated from Web3 Data API
-  return {
-    id: data.transactionHash,
-    token: data.tokenSymbol,
-    volume: data.volume,
-    score: calculateZScore(volume, historicalData),
-    time: data.timestamp,
-    isAnomaly: calculateZScore(volume, historicalData) > 90,
-    chain: data.chain,
-  };
+function calculateZScore(volume, historicalData) {
+  const mean = historicalData.reduce((sum, d) => sum + parseFloat(d.volume || 0), 0) / historicalData.length || 0;
+  const stdDev = Math.sqrt(historicalData.reduce((sum, d) => sum + Math.pow(parseFloat(d.volume || 0) - mean, 2), 0) / historicalData.length) || 1;
+  const trend = historicalData.slice(-10).reduce((sum, d) => sum + (parseFloat(d.volume || 0) - mean), 0) / 10 || 0;
+  return Math.min(100, Math.max(0, (volume - mean) / stdDev * 10 + (trend > 0 ? 5 : -5)));
 }
 
 app.get('/api/historical-transfers', async (req, res) => {

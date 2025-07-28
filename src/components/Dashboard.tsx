@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import io from 'socket.io-client';
+import { ethers } from 'ethers';
 
 interface Anomaly {
   id?: string;
@@ -25,10 +26,22 @@ const Dashboard: React.FC = () => {
       setTimeout(() => setAnomalyAlert(null), 5000);
     });
 
-    fetch('http://localhost:5000/api/historical-transfers')
-      .then((res) => res.json())
-      .then((data: Anomaly[]) => setAnomalies(data.filter((d: Anomaly) => d.isAnomaly)))
-      .catch(() => console.log('Failed to fetch historical data'));
+    // Fetch on-chain anomalies
+    const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_SEPOLIA_RPC_URL);
+    const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+    const abi = [/* ABI from compiled contract */]; // Replace with actual ABI
+    const contract = new ethers.Contract(contractAddress, abi, provider);
+
+    const fetchOnChainAnomalies = async () => {
+      const count = await contract.anomalyCount();
+      const anomaliesList = [];
+      for (let i = 1; i <= count; i++) {
+        const [token, score, timestamp, chain] = await contract.getAnomaly(i);
+        anomaliesList.push({ id: i.toString(), token, score, time: new Date(timestamp * 1000).toLocaleString(), chain });
+      }
+      setAnomalies(anomaliesList);
+    };
+    fetchOnChainAnomalies();
 
     return () => socket.disconnect();
   }, []);
@@ -70,8 +83,7 @@ const Dashboard: React.FC = () => {
             <h3 className="text-lg font-semibold text-white">{anomaly.token || 'Unknown'} Anomaly</h3>
             <p className="text-sm text-gray-400">Chain: {anomaly.chain || 'Unknown'}</p>
             <p className="text-sm text-gray-400">Score: {anomaly.score}</p>
-            <p className="text-sm text-gray-400">Volume: {anomaly.volume || 'N/A'}</p>
-            <p className="text-sm text-gray-400">Time: {new Date(anomaly.time || '').toLocaleTimeString()}</p>
+            <p className="text-sm text-gray-400">Time: {anomaly.time}</p>
             <button
               onClick={() => window.alert(`View report for ${anomaly.token} (ID: ${anomaly.id})`)}
               className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
